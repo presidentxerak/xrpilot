@@ -1,0 +1,168 @@
+{
+  "onramps": [
+    {
+      "id": "ramp",
+      "name": "Ramp",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT", "NL", "BE", "AT", "PT", "IE", "PL"],
+      "payment_methods": ["card", "apple_pay", "google_pay"],
+      "supports": ["XRP"],
+      "estimated_fees": "1.5% – 3%",
+      "estimated_time": "instant – 30min",
+      "kyc_required": true,
+      "affiliate_link": "https://ramp.network"
+    },
+    {
+      "id": "moonpay",
+      "name": "MoonPay",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT", "NL", "BE", "CA", "AU", "JP"],
+      "payment_methods": ["card", "bank", "apple_pay", "google_pay"],
+      "supports": ["XRP"],
+      "estimated_fees": "1% – 4.5%",
+      "estimated_time": "instant – 1hr",
+      "kyc_required": true,
+      "affiliate_link": "https://moonpay.com"
+    },
+    {
+      "id": "transak",
+      "name": "Transak",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT", "IN", "BR", "MX"],
+      "payment_methods": ["card", "bank"],
+      "supports": ["XRP"],
+      "estimated_fees": "1% – 5%",
+      "estimated_time": "5min – 2hr",
+      "kyc_required": true,
+      "affiliate_link": "https://transak.com"
+    },
+    {
+      "id": "simplex",
+      "name": "Simplex",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT", "CA", "AU"],
+      "payment_methods": ["card"],
+      "supports": ["XRP"],
+      "estimated_fees": "3.5% – 5%",
+      "estimated_time": "instant – 30min",
+      "kyc_required": true,
+      "affiliate_link": "https://simplex.com"
+    }
+  ],
+  "exchanges": [
+    {
+      "id": "bitstamp",
+      "name": "Bitstamp",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT", "NL"],
+      "payment_methods": ["bank", "card"],
+      "supports": ["XRP", "tokens"],
+      "estimated_fees": "0.1% – 0.5%",
+      "estimated_time": "1hr – 3 days",
+      "kyc_required": true,
+      "affiliate_link": "https://bitstamp.net"
+    },
+    {
+      "id": "kraken",
+      "name": "Kraken",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT", "CA", "AU", "JP"],
+      "payment_methods": ["bank", "card"],
+      "supports": ["XRP", "tokens"],
+      "estimated_fees": "0.16% – 0.26%",
+      "estimated_time": "1hr – 5 days",
+      "kyc_required": true,
+      "affiliate_link": "https://kraken.com"
+    },
+    {
+      "id": "uphold",
+      "name": "Uphold",
+      "countries": ["FR", "DE", "UK", "US", "ES", "IT"],
+      "payment_methods": ["card", "bank"],
+      "supports": ["XRP", "tokens"],
+      "estimated_fees": "0.8% – 1.2%",
+      "estimated_time": "instant – 1hr",
+      "kyc_required": true,
+      "affiliate_link": "https://uphold.com"
+    }
+  ],
+  "wallets": [
+    {
+      "id": "xaman",
+      "name": "Xaman (XUMM)",
+      "platforms": ["ios", "android"],
+      "features": ["xrpl_native", "dex", "nfts", "tokens"],
+      "description": "The most popular XRPL wallet with full ecosystem support.",
+      "download_link": "https://xaman.app"
+    },
+    {
+      "id": "crossmark",
+      "name": "Crossmark",
+      "platforms": ["browser"],
+      "features": ["xrpl_native", "dex", "nfts"],
+      "description": "Browser extension wallet for XRPL.",
+      "download_link": "https://crossmark.io"
+    },
+    {
+      "id": "gem",
+      "name": "GemWallet",
+      "platforms": ["browser"],
+      "features": ["xrpl_native", "dex"],
+      "description": "Simple browser wallet for XRP and XRPL tokens.",
+      "download_link": "https://gemwallet.app"
+    }
+  ],
+  "nft_marketplaces": [
+    {
+      "id": "xpmarket",
+      "name": "XPMarket",
+      "features": ["buy", "sell", "mint"],
+      "description": "The largest NFT marketplace on XRPL.",
+      "affiliate_link": "https://xpmarket.com"
+    },
+    {
+      "id": "onxrp",
+      "name": "onXRP",
+      "features": ["buy", "sell", "launchpad"],
+      "description": "NFT marketplace with launchpad features.",
+      "affiliate_link": "https://onxrp.com"
+    },
+    {
+      "id": "xrp_cafe",
+      "name": "XRP Cafe",
+      "features": ["buy", "sell"],
+      "description": "Curated NFT marketplace on XRPL.",
+      "affiliate_link": "https://xrp.cafe"
+    }
+  ],
+  "token_platforms": [
+    {
+      "id": "sologenic",
+      "name": "Sologenic DEX",
+      "features": ["trade", "stake"],
+      "description": "Trade tokenized assets and XRPL tokens.",
+      "affiliate_link": "https://sologenic.org"
+    },
+    {
+      "id": "xrpl_dex",
+      "name": "XRPL DEX",
+      "features": ["trade"],
+      "description": "Native decentralized exchange on XRPL.",
+      "affiliate_link": "https://xrpl.org/decentralized-exchange.html"
+    }
+  ],
+  "countries": [
+    { "code": "US", "name": "United States" },
+    { "code": "UK", "name": "United Kingdom" },
+    { "code": "FR", "name": "France" },
+    { "code": "DE", "name": "Germany" },
+    { "code": "ES", "name": "Spain" },
+    { "code": "IT", "name": "Italy" },
+    { "code": "NL", "name": "Netherlands" },
+    { "code": "BE", "name": "Belgium" },
+    { "code": "AT", "name": "Austria" },
+    { "code": "PT", "name": "Portugal" },
+    { "code": "IE", "name": "Ireland" },
+    { "code": "PL", "name": "Poland" },
+    { "code": "CA", "name": "Canada" },
+    { "code": "AU", "name": "Australia" },
+    { "code": "JP", "name": "Japan" },
+    { "code": "IN", "name": "India" },
+    { "code": "BR", "name": "Brazil" },
+    { "code": "MX", "name": "Mexico" }
+  ]
+}

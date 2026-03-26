@@ -1,35 +1,27 @@
-# Dependencies
-node_modules/
-.pnpm-store/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Build outputs
-dist/
-.next/
-out/
-build/
+# dependencies
+/node_modules
 
-# Environment
-.env
-.env.local
-.env.*.local
+# next.js
+/.next/
+/out/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# production
+/build
 
-# OS
-.DS_Store
-Thumbs.db
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
 
-# Turbo
-.turbo/
+# env files
+.env*
 
-# Testing
-coverage/
-playwright-report/
-test-results/
+# vercel
+.vercel
 
-# Extension builds
-apps/extension/dist/
+# typescript
+*.tsbuildinfo
+next-env.d.ts
