@@ -46,7 +46,7 @@ export async function deriveKey(
   return subtle.deriveKey(
     {
       name: "PBKDF2",
-      salt,
+      salt: salt as unknown as BufferSource,
       iterations: PBKDF2_ITERATIONS,
       hash: "SHA-256",
     },
@@ -100,9 +100,9 @@ export async function decrypt(
   let plaintext: ArrayBuffer;
   try {
     plaintext = await subtle.decrypt(
-      { name: "AES-GCM", iv },
+      { name: "AES-GCM", iv: iv as unknown as BufferSource },
       key,
-      ciphertext
+      ciphertext as unknown as BufferSource
     );
   } catch {
     throw new Error("Decryption failed. Incorrect PIN or corrupted data.");

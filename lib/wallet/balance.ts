@@ -8,7 +8,7 @@ const OWNER_RESERVE_XRP = 2;
  * 1 XRP = 1,000,000 drops.
  */
 export function dropsToXrp(drops: string | number): string {
-  return xrplDropsToXrp(drops);
+  return xrplDropsToXrp(drops) as unknown as string;
 }
 
 /**

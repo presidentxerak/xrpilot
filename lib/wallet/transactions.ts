@@ -72,9 +72,9 @@ export function toHumanReadable(
     ownerCount
   );
   const remainingDrops =
-    BigInt(currentAvailable) - BigInt(amountInDrops);
+    Number(currentAvailable) - Number(amountInDrops);
   const remainingXrp =
-    remainingDrops > 0n ? formatXrp(remainingDrops.toString()) : "0";
+    remainingDrops > 0 ? formatXrp(remainingDrops.toString()) : "0";
 
   return `You are sending ${sendingXrp} XRP. After this, you will have ${remainingXrp} XRP available.`;
 }
@@ -135,8 +135,8 @@ export async function getTransactionHistory(
         ? tx.Amount
         : "0";
 
-    const closeTime = txEntry.close_time_iso
-      ? new Date(txEntry.close_time_iso).getTime()
+    const closeTime = (txEntry as unknown as Record<string, unknown>).close_time_iso
+      ? new Date((txEntry as unknown as Record<string, unknown>).close_time_iso as string).getTime()
       : 0;
 
     transactions.push({
