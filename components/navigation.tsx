@@ -2,12 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Plane, Home, Compass, BookOpen, Info } from "lucide-react"
+import { Plane, Home, Compass, BookOpen, Info, Wallet } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/pilot", label: "Pilot", icon: Compass },
+  { href: "/pilot/wallet", label: "Wallet", icon: Wallet },
   { href: "/guides", label: "Guides", icon: BookOpen },
   { href: "/about", label: "About", icon: Info },
 ]
@@ -32,7 +33,7 @@ export function DesktopNav() {
               href={item.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
-                pathname === item.href ? "text-primary" : "text-muted-foreground",
+                pathname === item.href || pathname.startsWith(item.href + "/") ? "text-primary" : "text-muted-foreground",
               )}
             >
               {item.label}
@@ -40,12 +41,20 @@ export function DesktopNav() {
           ))}
         </div>
 
-        <Link
-          href="/pilot"
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white text-sm font-medium shadow-lg hover:shadow-xl transition-shadow animate-gradient"
-        >
-          Start Flying
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/pilot/wallet"
+            className="px-4 py-2 rounded-xl border border-primary/30 text-primary text-sm font-medium hover:bg-primary/10 transition-colors"
+          >
+            Open Wallet
+          </Link>
+          <Link
+            href="/pilot"
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white text-sm font-medium shadow-lg hover:shadow-xl transition-shadow animate-gradient"
+          >
+            Start Flying
+          </Link>
+        </div>
       </nav>
     </header>
   )
@@ -59,7 +68,7 @@ export function MobileNav() {
       <div className="flex items-center justify-around py-2 px-4">
         {navItems.map((item) => {
           const Icon = item.icon
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
           return (
             <Link
               key={item.href}
