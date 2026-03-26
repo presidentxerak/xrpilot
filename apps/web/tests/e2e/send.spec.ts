@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Send Transaction", () => {
   test.beforeEach(async ({ page }) => {
     // Seed the app with a test wallet via localStorage or test API
-    await page.goto("/wallet");
+    await page.goto("/pilot/wallet");
     await page.evaluate(() => {
       localStorage.setItem(
         "pilot-wallet-state",

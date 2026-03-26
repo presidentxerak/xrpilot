@@ -35,7 +35,7 @@ export default function ObjectDetailPage() {
             This object may have been transferred or does not exist.
           </p>
           <button
-            onClick={() => router.push('/objects')}
+            onClick={() => router.push('/pilot/objects')}
             className="pilot-button-primary px-6 py-3"
           >
             Back to My Objects

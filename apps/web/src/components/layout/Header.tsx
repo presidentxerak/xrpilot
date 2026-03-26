@@ -22,7 +22,7 @@ export function Header() {
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[var(--border)] bg-surface px-4 py-3 safe-top lg:px-6">
       {/* Logo (mobile only) */}
       <Link
-        href="/app"
+        href="/pilot/app"
         className="flex items-center gap-2 lg:hidden"
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-xs text-white font-bold">

@@ -4,7 +4,7 @@ test.describe("Onboarding Flow", () => {
   test("should create a new wallet through the onboarding flow", async ({
     page,
   }) => {
-    await page.goto("/wallet");
+    await page.goto("/pilot/wallet");
 
     // Landing page should show the create wallet CTA
     await expect(
@@ -63,7 +63,7 @@ test.describe("Onboarding Flow", () => {
   });
 
   test("should show import wallet option", async ({ page }) => {
-    await page.goto("/wallet");
+    await page.goto("/pilot/wallet");
 
     const importLink = page.getByRole("button", {
       name: /import|restore|recover/i,

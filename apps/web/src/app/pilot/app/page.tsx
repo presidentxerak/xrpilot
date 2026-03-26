@@ -24,7 +24,7 @@ export default function AppPage() {
 
   useEffect(() => {
     if (accounts.length === 0 || !onboardingComplete) {
-      router.replace('/app/onboarding');
+      router.replace('/pilot/app/onboarding');
     }
   }, [accounts, onboardingComplete, router]);
 
@@ -49,7 +49,7 @@ export default function AppPage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-3">
           <Link
-            href="/app/send"
+            href="/pilot/app/send"
             className="pilot-card-interactive flex flex-col items-center justify-center gap-2 py-5"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent-subtle text-accent text-xl">
@@ -59,7 +59,7 @@ export default function AppPage() {
           </Link>
 
           <Link
-            href="/app/receive"
+            href="/pilot/app/receive"
             className="pilot-card-interactive flex flex-col items-center justify-center gap-2 py-5"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-success-subtle text-success text-xl">
@@ -75,7 +75,7 @@ export default function AppPage() {
             <div className="mb-3 flex items-center justify-between">
               <h2 className="pilot-section-title mb-0">My Objects</h2>
               <Link
-                href="/objects"
+                href="/pilot/objects"
                 className="text-sm font-medium text-accent min-h-touch flex items-center"
               >
                 View All
@@ -85,7 +85,7 @@ export default function AppPage() {
               {objects.slice(0, 4).map((obj) => (
                 <Link
                   key={obj.id}
-                  href={`/objects/${obj.id}`}
+                  href={`/pilot/objects/${obj.id}`}
                   className="pilot-card-interactive flex-shrink-0 w-32 p-3"
                 >
                   <div className="mb-2 aspect-square w-full rounded-lg bg-accent-subtle flex items-center justify-center text-2xl">

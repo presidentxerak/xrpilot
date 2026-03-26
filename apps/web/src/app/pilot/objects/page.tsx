@@ -137,7 +137,7 @@ export default function ObjectsPage() {
               Objects are digital items like tickets, coupons, collectibles, and passes.
               When someone sends you one, it will appear here.
             </p>
-            <Link href="/learn" className="pilot-button-secondary px-6 py-3">
+            <Link href="/pilot/learn" className="pilot-button-secondary px-6 py-3">
               Learn how objects work
             </Link>
           </div>

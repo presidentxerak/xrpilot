@@ -8,10 +8,10 @@ import { useWalletStore } from '@/stores/wallet';
 import { Header } from './Header';
 
 const navItems = [
-  { href: '/app', label: 'Home', icon: '🏠' },
-  { href: '/objects', label: 'Objects', icon: '📦' },
-  { href: '/app/swap', label: 'Swap', icon: '🔄' },
-  { href: '/security', label: 'Settings', icon: '⚙️' },
+  { href: '/pilot/app', label: 'Home', icon: '🏠' },
+  { href: '/pilot/objects', label: 'Objects', icon: '📦' },
+  { href: '/pilot/app/swap', label: 'Swap', icon: '🔄' },
+  { href: '/pilot/security', label: 'Settings', icon: '⚙️' },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -24,7 +24,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:w-60 lg:flex-col lg:border-r lg:border-[var(--border)] lg:bg-surface-raised">
         <div className="p-6">
-          <Link href="/app" className="flex items-center gap-2">
+          <Link href="/pilot/app" className="flex items-center gap-2">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-sm text-white font-bold">
               P
             </span>
@@ -34,8 +34,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <nav className="flex-1 px-3 py-4 space-y-1">
           {navItems.map((item) => {
             const isActive =
-              item.href === '/app'
-                ? pathname === '/app'
+              item.href === '/pilot/app'
+                ? pathname === '/pilot/app'
                 : pathname.startsWith(item.href);
             return (
               <Link
@@ -66,8 +66,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="mx-auto flex max-w-lg items-stretch justify-around">
             {navItems.map((item) => {
               const isActive =
-                item.href === '/app'
-                  ? pathname === '/app'
+                item.href === '/pilot/app'
+                  ? pathname === '/pilot/app'
                   : pathname.startsWith(item.href);
               return (
                 <Link
