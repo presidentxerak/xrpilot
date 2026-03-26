@@ -37,7 +37,8 @@ export function importFromSeed(seed: string): WalletKeys {
  * Import an XRPL wallet from raw entropy (hex string).
  */
 export function importFromEntropy(entropy: string): WalletKeys {
-  const wallet = Wallet.fromEntropy(entropy);
+  const bytes = hexToUint8Array(entropy);
+  const wallet = Wallet.fromEntropy(bytes);
   return {
     address: wallet.address,
     publicKey: wallet.publicKey,
