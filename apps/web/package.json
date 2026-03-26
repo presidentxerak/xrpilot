@@ -1,0 +1,39 @@
+{
+  "name": "@pilot/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@pilot/ui": "workspace:*",
+    "@pilot/wallet-core": "workspace:*",
+    "@pilot/xrpl-client": "workspace:*",
+    "@pilot/security": "workspace:*",
+    "@pilot/objects-engine": "workspace:*",
+    "@pilot/analytics": "workspace:*",
+    "@pilot/shared": "workspace:*",
+    "@pilot/design-tokens": "workspace:*",
+    "@tanstack/react-query": "^5.0.0",
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "zustand": "^4.5.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0",
+    "@playwright/test": "^1.44.0",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0"
+  }
+}

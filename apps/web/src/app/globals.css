@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface: #ffffff;
+    --surface-raised: #f8fafc;
+    --surface-overlay: rgba(0, 0, 0, 0.5);
+
+    --content: #0f172a;
+    --content-secondary: #475569;
+    --content-tertiary: #94a3b8;
+
+    --accent: #3378ff;
+    --accent-hover: #1b57f5;
+    --accent-subtle: #eef5ff;
+
+    --border: #e2e8f0;
+    --border-focus: #3378ff;
+
+    --radius: 12px;
+  }
+
+  .dark {
+    --surface: #0f172a;
+    --surface-raised: #1e293b;
+    --surface-overlay: rgba(0, 0, 0, 0.7);
+
+    --content: #f1f5f9;
+    --content-secondary: #94a3b8;
+    --content-tertiary: #64748b;
+
+    --accent: #599eff;
+    --accent-hover: #3378ff;
+    --accent-subtle: #142157;
+
+    --border: #334155;
+    --border-focus: #599eff;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    font-family: 'Roboto', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface text-content;
+    min-height: 100dvh;
+  }
+
+  /* Ensure touch targets meet minimum size */
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@layer components {
+  .pilot-card {
+    @apply rounded-pilot bg-surface-raised shadow-card p-4;
+    border: 1px solid var(--border);
+  }
+
+  .pilot-card-interactive {
+    @apply pilot-card transition-shadow duration-200 cursor-pointer;
+  }
+
+  .pilot-card-interactive:hover {
+    @apply shadow-card-hover;
+  }
+
+  .pilot-button {
+    @apply inline-flex items-center justify-center rounded-pilot font-medium
+           min-h-touch px-6 transition-colors duration-150;
+  }
+
+  .pilot-button-primary {
+    @apply pilot-button bg-accent text-white;
+  }
+
+  .pilot-button-primary:hover {
+    @apply bg-accent-hover;
+  }
+
+  .pilot-button-secondary {
+    @apply pilot-button bg-accent-subtle text-accent;
+  }
+
+  .pilot-button-secondary:hover {
+    @apply bg-pilot-200 dark:bg-pilot-900;
+  }
+
+  .pilot-input {
+    @apply w-full rounded-pilot min-h-touch px-4 py-3
+           bg-surface-raised text-content
+           border border-[var(--border)]
+           focus:outline-none focus:ring-2 focus:ring-[var(--border-focus)]
+           placeholder:text-content-tertiary
+           transition-colors duration-150;
+  }
+
+  .pilot-section-title {
+    @apply text-lg font-medium text-content mb-3;
+  }
+
+  .pilot-body {
+    @apply text-base text-content-secondary leading-relaxed;
+  }
+
+  .pilot-caption {
+    @apply text-sm text-content-tertiary;
+  }
+
+  .pilot-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
