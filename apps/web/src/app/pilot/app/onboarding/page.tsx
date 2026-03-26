@@ -54,7 +54,7 @@ export default function OnboardingPage() {
 
   const handleFinish = () => {
     setOnboarded(true);
-    router.replace('/app');
+    router.replace('/pilot/app');
   };
 
   return (

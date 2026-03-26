@@ -47,12 +47,12 @@ export default function WalletPage() {
 
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             {hasWallet ? (
-              <Link href="/app" className="pilot-button-primary text-lg px-8 py-3">
+              <Link href="/pilot/app" className="pilot-button-primary text-lg px-8 py-3">
                 Open Your Wallet
               </Link>
             ) : (
               <Link
-                href="/app/onboarding"
+                href="/pilot/app/onboarding"
                 className="pilot-button-primary text-lg px-8 py-3"
               >
                 Create Your Wallet
@@ -60,7 +60,7 @@ export default function WalletPage() {
             )}
 
             <Link
-              href="/learn"
+              href="/pilot/learn"
               className="pilot-button-secondary text-lg px-8 py-3"
             >
               Learn More
@@ -156,7 +156,7 @@ export default function WalletPage() {
             Your wallet is free to create and always under your control.
           </p>
           <Link
-            href={hasWallet ? '/app' : '/app/onboarding'}
+            href={hasWallet ? '/pilot/app' : '/pilot/app/onboarding'}
             className="pilot-button-primary text-lg px-10 py-3"
           >
             {hasWallet ? 'Open Your Wallet' : 'Create Your Wallet'}

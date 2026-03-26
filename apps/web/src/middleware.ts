@@ -9,5 +9,5 @@ export function middleware(_request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/app/:path*'],
+  matcher: ['/pilot/app/:path*'],
 };

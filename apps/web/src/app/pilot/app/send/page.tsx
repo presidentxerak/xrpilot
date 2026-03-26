@@ -252,7 +252,7 @@ export default function SendPage() {
               successfully.
             </p>
             <button
-              onClick={() => router.push('/app')}
+              onClick={() => router.push('/pilot/app')}
               className="pilot-button-primary px-8 py-3"
             >
               Back to Wallet
