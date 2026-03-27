@@ -17,21 +17,23 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card"
-
-const WALLET_ADDRESS = "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh"
+import { useWalletStore } from "@/stores/wallet-store"
 
 export default function ReceivePage() {
+  const activeAddress = useWalletStore((s) => s.activeAddress)
   const [copied, setCopied] = useState(false)
 
+  const walletAddress = activeAddress || "No wallet found"
+
   const handleCopy = async () => {
+    if (!activeAddress) return
     try {
-      await navigator.clipboard.writeText(WALLET_ADDRESS)
+      await navigator.clipboard.writeText(activeAddress)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Fallback for older browsers
       const textarea = document.createElement("textarea")
-      textarea.value = WALLET_ADDRESS
+      textarea.value = activeAddress
       document.body.appendChild(textarea)
       textarea.select()
       document.execCommand("copy")
@@ -42,10 +44,11 @@ export default function ReceivePage() {
   }
 
   const handleShare = async () => {
+    if (!activeAddress) return
     if (navigator.share) {
       await navigator.share({
         title: "My XRP Address",
-        text: WALLET_ADDRESS,
+        text: activeAddress,
       })
     } else {
       handleCopy()
@@ -76,7 +79,7 @@ export default function ReceivePage() {
           {/* Address Display */}
           <div className="p-6 rounded-xl bg-muted/30 border border-border/50 text-center">
             <p className="font-mono text-base md:text-lg break-all text-foreground leading-relaxed select-all">
-              {WALLET_ADDRESS}
+              {walletAddress}
             </p>
           </div>
 
@@ -87,6 +90,7 @@ export default function ReceivePage() {
               variant="outline"
               size="lg"
               className="min-h-[44px] gap-2"
+              disabled={!activeAddress}
             >
               {copied ? (
                 <>
@@ -105,10 +109,30 @@ export default function ReceivePage() {
               variant="outline"
               size="lg"
               className="min-h-[44px] gap-2"
+              disabled={!activeAddress}
             >
               <Share2 className="w-5 h-5" />
               Share
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Activation Notice */}
+      <Card className="border-border/50 bg-yellow-500/5">
+        <CardContent className="pt-6">
+          <div className="flex gap-3">
+            <Info className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-foreground">
+                Account Activation
+              </p>
+              <p className="text-sm text-muted-foreground">
+                New XRPL accounts require a minimum of 10 XRP to activate.
+                Until your account is activated, it will not appear on the ledger.
+                Ask someone to send at least 10 XRP to this address to get started.
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>

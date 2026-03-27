@@ -1,9 +1,10 @@
 import { Client } from "xrpl";
 
-const DEFAULT_NODES = [
-  "wss://xrplcluster.com",
-  "wss://s1.ripple.com",
-];
+const DEFAULT_NODES = (
+  typeof process !== "undefined" && process.env?.NEXT_PUBLIC_XRPL_NODES
+    ? process.env.NEXT_PUBLIC_XRPL_NODES.split(",").map((u) => u.trim())
+    : ["wss://xrplcluster.com", "wss://s1.ripple.com"]
+);
 
 const CONNECTION_TIMEOUT_MS = 10_000;
 

@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { Wallet, ArrowDownToLine, Send, Shield, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { useWalletStore } from "@/stores/wallet-store"
 
 const features = [
   {
@@ -28,8 +28,9 @@ const features = [
 ]
 
 export default function WalletEntryPage() {
-  // In a real app, this would check local storage or auth state
-  const [hasWallet] = useState(false)
+  const isOnboarded = useWalletStore((s) => s.isOnboarded)
+  const activeAddress = useWalletStore((s) => s.activeAddress)
+  const hasWallet = isOnboarded && !!activeAddress
 
   return (
     <div className="space-y-16">

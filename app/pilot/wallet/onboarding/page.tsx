@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Wallet, ShieldCheck, PartyPopper } from "lucide-react"
+import { Wallet, ShieldCheck, PartyPopper, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -11,6 +11,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
+import { useWalletStore } from "@/stores/wallet-store"
 
 const TOTAL_STEPS = 3
 
@@ -20,10 +21,15 @@ export default function OnboardingPage() {
   const [pin, setPin] = useState("")
   const [confirmPin, setConfirmPin] = useState("")
   const [pinError, setPinError] = useState("")
+  const [isCreating, setIsCreating] = useState(false)
+
+  const createWallet = useWalletStore((s) => s.createWallet)
+  const setOnboarded = useWalletStore((s) => s.setOnboarded)
+  const unlock = useWalletStore((s) => s.unlock)
 
   const progressValue = (step / TOTAL_STEPS) * 100
 
-  const handlePinConfirm = () => {
+  const handlePinConfirm = async () => {
     if (pin.length < 6) {
       setPinError("Please enter all 6 digits.")
       return
@@ -38,11 +44,20 @@ export default function OnboardingPage() {
       return
     }
     setPinError("")
-    // In a real app, securely store the PIN
-    if (typeof window !== "undefined") {
-      localStorage.setItem("xrpilot_wallet", "true")
+    setIsCreating(true)
+
+    try {
+      await createWallet(pin, "My Wallet")
+      setOnboarded()
+      unlock(pin)
+      setStep(3)
+    } catch (err) {
+      setPinError(
+        err instanceof Error ? err.message : "Failed to create wallet."
+      )
+    } finally {
+      setIsCreating(false)
     }
-    setStep(3)
   }
 
   const handleFinish = () => {
@@ -169,10 +184,18 @@ export default function OnboardingPage() {
 
             <Button
               onClick={handlePinConfirm}
+              disabled={isCreating}
               size="lg"
               className="w-full min-h-[44px] bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white border-0 hover:opacity-90 transition-opacity"
             >
-              Set PIN
+              {isCreating ? (
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  Creating Wallet...
+                </>
+              ) : (
+                "Set PIN"
+              )}
             </Button>
           </CardContent>
         </Card>

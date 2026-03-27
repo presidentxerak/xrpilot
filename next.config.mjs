@@ -6,7 +6,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
- 
+  turbopack: {},
+  serverExternalPackages: ["xrpl"],
 }
 
 export default nextConfig

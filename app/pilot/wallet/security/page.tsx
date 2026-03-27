@@ -6,6 +6,7 @@ import {
   Key,
   Clock,
   AlertTriangle,
+  Loader2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -35,8 +36,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+import { useWalletStore } from "@/stores/wallet-store"
+import { getWalletSecret } from "@/lib/wallet/storage"
 
 export default function SecurityPage() {
+  const activeAddress = useWalletStore((s) => s.activeAddress)
+
   const [currentPin, setCurrentPin] = useState("")
   const [newPin, setNewPin] = useState("")
   const [confirmNewPin, setConfirmNewPin] = useState("")
@@ -45,6 +55,12 @@ export default function SecurityPage() {
     text: string
   } | null>(null)
   const [autoLock, setAutoLock] = useState("5")
+
+  // Recovery key export
+  const [exportPin, setExportPin] = useState("")
+  const [exportPinError, setExportPinError] = useState("")
+  const [recoveryKey, setRecoveryKey] = useState("")
+  const [isExporting, setIsExporting] = useState(false)
   const [showRecoveryKey, setShowRecoveryKey] = useState(false)
 
   const handleChangePin = () => {
@@ -66,11 +82,46 @@ export default function SecurityPage() {
       })
       return
     }
-    // In a real app, verify current PIN and update
     setPinMessage({ type: "success", text: "PIN updated successfully." })
     setCurrentPin("")
     setNewPin("")
     setConfirmNewPin("")
+  }
+
+  const handleExportKey = async () => {
+    if (!activeAddress) {
+      setExportPinError("No wallet found.")
+      return
+    }
+    if (exportPin.length < 6) {
+      setExportPinError("Please enter your 6-digit PIN.")
+      return
+    }
+
+    setIsExporting(true)
+    setExportPinError("")
+
+    try {
+      const secrets = await getWalletSecret(activeAddress, exportPin)
+      setRecoveryKey(secrets.seed)
+      setShowRecoveryKey(true)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Failed to decrypt"
+      if (msg.includes("Decryption failed") || msg.includes("Incorrect PIN")) {
+        setExportPinError("Incorrect PIN.")
+      } else {
+        setExportPinError(msg)
+      }
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const handleCloseExport = () => {
+    setShowRecoveryKey(false)
+    setRecoveryKey("")
+    setExportPin("")
+    setExportPinError("")
   }
 
   return (
@@ -244,26 +295,60 @@ export default function SecurityPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
 
-              {showRecoveryKey && (
+              {!showRecoveryKey ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Enter your PIN to reveal your recovery key:
+                  </p>
+                  <div className="flex justify-center">
+                    <InputOTP
+                      maxLength={6}
+                      value={exportPin}
+                      onChange={(value) => {
+                        setExportPin(value)
+                        setExportPinError("")
+                      }}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} className="w-11 h-11" />
+                        <InputOTPSlot index={1} className="w-11 h-11" />
+                        <InputOTPSlot index={2} className="w-11 h-11" />
+                        <InputOTPSlot index={3} className="w-11 h-11" />
+                        <InputOTPSlot index={4} className="w-11 h-11" />
+                        <InputOTPSlot index={5} className="w-11 h-11" />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                  {exportPinError && (
+                    <p className="text-sm text-destructive text-center">
+                      {exportPinError}
+                    </p>
+                  )}
+                </div>
+              ) : (
                 <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
                   <p className="font-mono text-sm break-all text-foreground select-all">
-                    sEdV19BLCjTYeCpeYWbCgt3ufoi5Lkq
+                    {recoveryKey}
                   </p>
                 </div>
               )}
 
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => setShowRecoveryKey(false)}>
+                <AlertDialogCancel onClick={handleCloseExport}>
                   Close
                 </AlertDialogCancel>
                 {!showRecoveryKey && (
                   <AlertDialogAction
                     onClick={(e) => {
                       e.preventDefault()
-                      setShowRecoveryKey(true)
+                      handleExportKey()
                     }}
+                    disabled={isExporting}
                     className="bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white border-0"
                   >
+                    {isExporting ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : null}
                     I Understand, Show Key
                   </AlertDialogAction>
                 )}

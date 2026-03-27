@@ -7,6 +7,8 @@ import {
   Send,
   Info,
   CheckCircle2,
+  Loader2,
+  AlertCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -16,7 +18,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card"
 import {
   Tooltip,
@@ -24,19 +25,98 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-
-const AVAILABLE_BALANCE = 142.5
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
+import { useWalletStore } from "@/stores/wallet-store"
+import { useBalance, useSendXrp } from "@/hooks/use-wallet"
+import { formatXrp, xrpToDrops } from "@/lib/wallet/balance"
+import { getWalletSecret } from "@/lib/wallet/storage"
 
 export default function SendPage() {
-  const [step, setStep] = useState<"form" | "confirm" | "done">("form")
+  const activeAddress = useWalletStore((s) => s.activeAddress)
+  const { accountInfo } = useBalance(activeAddress)
+
+  const [step, setStep] = useState<"form" | "pin" | "confirm" | "sending" | "done" | "error">("form")
   const [recipient, setRecipient] = useState("")
   const [amount, setAmount] = useState("")
   const [destinationTag, setDestinationTag] = useState("")
+  const [pin, setPin] = useState("")
+  const [pinError, setPinError] = useState("")
+  const [txHash, setTxHash] = useState("")
+  const [sendError, setSendError] = useState("")
 
+  const { send } = useSendXrp()
+
+  const balanceXrp = accountInfo ? parseFloat(formatXrp(accountInfo.balance)) : 0
+  const reserveXrp = accountInfo ? 10 + accountInfo.ownerCount * 2 : 10
+  const availableXrp = Math.max(0, balanceXrp - reserveXrp)
   const parsedAmount = parseFloat(amount) || 0
-  const remainingBalance = AVAILABLE_BALANCE - parsedAmount
+  const remainingBalance = availableXrp - parsedAmount
   const isValid =
-    recipient.length > 0 && parsedAmount > 0 && parsedAmount <= AVAILABLE_BALANCE
+    recipient.startsWith("r") &&
+    recipient.length >= 25 &&
+    parsedAmount > 0 &&
+    parsedAmount <= availableXrp
+
+  const handlePinSubmit = async () => {
+    if (pin.length < 6) {
+      setPinError("Please enter your 6-digit PIN.")
+      return
+    }
+
+    try {
+      const secrets = await getWalletSecret(activeAddress!, pin)
+      setStep("sending")
+      setPinError("")
+
+      const result = await send({
+        fromSeed: secrets.seed,
+        to: recipient,
+        amountInDrops: xrpToDrops(parsedAmount.toString()),
+        destinationTag: destinationTag ? parseInt(destinationTag, 10) : undefined,
+      })
+
+      if (result.status === "success") {
+        setTxHash(result.hash)
+        setStep("done")
+      } else {
+        setSendError(`Transaction failed: ${result.resultCode}`)
+        setStep("error")
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Transaction failed"
+      if (message.includes("Decryption failed") || message.includes("Incorrect PIN")) {
+        setPinError("Incorrect PIN. Please try again.")
+        setPin("")
+        setStep("pin")
+      } else {
+        setSendError(message)
+        setStep("error")
+      }
+    }
+  }
+
+  if (step === "error") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
+        <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center">
+          <AlertCircle className="w-8 h-8 text-red-400" />
+        </div>
+        <h2 className="text-2xl font-bold text-foreground">Payment Failed</h2>
+        <p className="text-muted-foreground max-w-sm">{sendError}</p>
+        <Button
+          onClick={() => { setStep("form"); setSendError(""); setPin("") }}
+          size="lg"
+          className="min-h-[44px]"
+        >
+          Try Again
+        </Button>
+      </div>
+    )
+  }
 
   if (step === "done") {
     return (
@@ -48,11 +128,83 @@ export default function SendPage() {
         <p className="text-muted-foreground">
           You sent {parsedAmount.toFixed(2)} XRP to {recipient.slice(0, 8)}...
         </p>
+        {txHash && (
+          <p className="text-xs text-muted-foreground font-mono break-all max-w-sm">
+            TX: {txHash.slice(0, 16)}...{txHash.slice(-16)}
+          </p>
+        )}
         <Link href="/pilot/wallet/app">
           <Button size="lg" className="min-h-[44px]">
             Back to Wallet
           </Button>
         </Link>
+      </div>
+    )
+  }
+
+  if (step === "sending") {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <h2 className="text-xl font-bold text-foreground">Sending Payment...</h2>
+        <p className="text-sm text-muted-foreground">
+          Please wait while your transaction is submitted to the ledger.
+        </p>
+      </div>
+    )
+  }
+
+  if (step === "pin") {
+    return (
+      <div className="space-y-6">
+        <button
+          onClick={() => { setStep("confirm"); setPin(""); setPinError("") }}
+          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors min-h-[44px]"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Go back
+        </button>
+
+        <Card className="border-border/50">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">Enter PIN to Confirm</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <p className="text-sm text-muted-foreground text-center">
+              Enter your 6-digit PIN to authorize this payment of {parsedAmount.toFixed(2)} XRP.
+            </p>
+            <div className="flex justify-center">
+              <InputOTP
+                maxLength={6}
+                value={pin}
+                onChange={(value) => {
+                  setPin(value)
+                  setPinError("")
+                }}
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} className="w-11 h-11" />
+                  <InputOTPSlot index={1} className="w-11 h-11" />
+                  <InputOTPSlot index={2} className="w-11 h-11" />
+                  <InputOTPSlot index={3} className="w-11 h-11" />
+                  <InputOTPSlot index={4} className="w-11 h-11" />
+                  <InputOTPSlot index={5} className="w-11 h-11" />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+            {pinError && (
+              <p className="text-sm text-destructive text-center">{pinError}</p>
+            )}
+            <Button
+              onClick={handlePinSubmit}
+              size="lg"
+              className="w-full min-h-[44px] bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white border-0 hover:opacity-90 transition-opacity"
+            >
+              <Send className="w-5 h-5 mr-2" />
+              Confirm &amp; Send
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     )
   }
@@ -107,12 +259,12 @@ export default function SendPage() {
             </div>
 
             <Button
-              onClick={() => setStep("done")}
+              onClick={() => setStep("pin")}
               size="lg"
               className="w-full min-h-[44px] bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 text-white border-0 hover:opacity-90 transition-opacity"
             >
               <Send className="w-5 h-5 mr-2" />
-              Send Payment
+              Continue
             </Button>
           </CardContent>
         </Card>
@@ -167,7 +319,12 @@ export default function SendPage() {
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Available: {AVAILABLE_BALANCE.toFixed(2)} XRP
+              Available: {availableXrp.toFixed(2)} XRP
+              {balanceXrp > 0 && (
+                <span className="text-muted-foreground/60">
+                  {" "}(total {balanceXrp.toFixed(2)}, {reserveXrp} XRP reserved)
+                </span>
+              )}
             </p>
           </div>
 
