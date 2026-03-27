@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware";
 import type { WalletAccount } from "@/lib/wallet/types";
 import { generateWallet, importFromSeed } from "@/lib/wallet/keygen";
 import { saveWallet, loadWallets, removeWallet } from "@/lib/wallet/storage";
+import type { XrplNetwork } from "@/lib/wallet/connection";
+import { setNetwork } from "@/lib/wallet/connection";
 
 interface WalletState {
   accounts: WalletAccount[];
@@ -12,6 +14,8 @@ interface WalletState {
   isLocked: boolean;
   isAdvancedMode: boolean;
   isOnboarded: boolean;
+  network: XrplNetwork;
+  isActivated: boolean;
 }
 
 interface WalletActions {
@@ -30,6 +34,8 @@ interface WalletActions {
   toggleAdvancedMode: () => void;
   setOnboarded: () => void;
   refreshAccounts: () => void;
+  switchNetwork: (network: XrplNetwork) => Promise<void>;
+  setActivated: (activated: boolean) => void;
 }
 
 type WalletStore = WalletState & WalletActions;
@@ -45,6 +51,8 @@ export const useWalletStore = create<WalletStore>()(
       isLocked: true,
       isAdvancedMode: false,
       isOnboarded: false,
+      network: "testnet",
+      isActivated: false,
 
       // Actions
       createWallet: async (pin, label) => {
@@ -88,8 +96,6 @@ export const useWalletStore = create<WalletStore>()(
       },
 
       unlock: (_pin: string) => {
-        // PIN verification happens at the decryption layer.
-        // If we reach here, the PIN was already validated.
         set({ isLocked: false });
       },
 
@@ -117,6 +123,15 @@ export const useWalletStore = create<WalletStore>()(
         const accounts = loadWallets();
         set({ accounts });
       },
+
+      switchNetwork: async (network) => {
+        await setNetwork(network);
+        set({ network, balance: null, isActivated: false });
+      },
+
+      setActivated: (activated) => {
+        set({ isActivated: activated });
+      },
     }),
     {
       name: "xrpilot_wallet_store",
@@ -125,6 +140,8 @@ export const useWalletStore = create<WalletStore>()(
         isAdvancedMode: state.isAdvancedMode,
         isOnboarded: state.isOnboarded,
         isLocked: state.isLocked,
+        network: state.network,
+        isActivated: state.isActivated,
       }),
     }
   )

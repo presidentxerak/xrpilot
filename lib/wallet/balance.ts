@@ -1,7 +1,7 @@
 import { dropsToXrp as xrplDropsToXrp, xrpToDrops as xrplXrpToDrops } from "xrpl";
 
-const BASE_RESERVE_XRP = 10;
-const OWNER_RESERVE_XRP = 2;
+const BASE_RESERVE_XRP = 1;
+const OWNER_RESERVE_XRP = 0.2;
 
 /**
  * Converts drops (smallest XRP unit) to a human-readable XRP string.

@@ -51,7 +51,7 @@ export default function SendPage() {
   const { send } = useSendXrp()
 
   const balanceXrp = accountInfo ? parseFloat(formatXrp(accountInfo.balance)) : 0
-  const reserveXrp = accountInfo ? 10 + accountInfo.ownerCount * 2 : 10
+  const reserveXrp = accountInfo ? 1 + accountInfo.ownerCount * 0.2 : 1
   const availableXrp = Math.max(0, balanceXrp - reserveXrp)
   const parsedAmount = parseFloat(amount) || 0
   const remainingBalance = availableXrp - parsedAmount

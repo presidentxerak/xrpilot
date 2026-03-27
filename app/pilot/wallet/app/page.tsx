@@ -32,6 +32,7 @@ export default function WalletDashboard() {
   const router = useRouter()
   const isOnboarded = useWalletStore((s) => s.isOnboarded)
   const activeAddress = useWalletStore((s) => s.activeAddress)
+  const network = useWalletStore((s) => s.network)
 
   const { accountInfo, isLoading: balanceLoading, error: balanceError } = useBalance(activeAddress)
   const { transactions, isLoading: txLoading } = useTransactionHistory(activeAddress)
@@ -73,6 +74,11 @@ export default function WalletDashboard() {
       {/* Balance Card */}
       <Card className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-cyan-400/10 border-border/50">
         <CardContent className="pt-6 text-center space-y-2">
+          {network === "testnet" && (
+            <Badge variant="secondary" className="mb-2 bg-yellow-500/10 text-yellow-500 border-yellow-500/20">
+              Testnet
+            </Badge>
+          )}
           <p className="text-sm text-muted-foreground">Available Balance</p>
           {balanceLoading && !accountInfo ? (
             <Loader2 className="w-8 h-8 animate-spin mx-auto text-muted-foreground" />
